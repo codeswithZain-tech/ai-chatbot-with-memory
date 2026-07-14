@@ -1,83 +1,53 @@
-# Project 1: AI Chatbot with Memory (Google Gemini) — README
+# AI Chatbot with Memory
 
-This chatbot runs in the terminal, uses **Google Gemini**, and remembers
-previous messages during a conversation via an in-memory history array.
+A conversational terminal application powered by **Google Gemini** that remembers previous messages during a live session using an in-memory history array with sliding-window pruning.
 
----
-
-## 1. Requirements
-
-- **Python 3.9 or higher** installed on your computer.
-- Internet connection.
-- A **FREE API key** from Google (get it from Google AI Studio — no
-  credit card required).
+Part of **DecodeLabs Generative AI Industrial Training Kit (Batch 2026)**.
 
 ---
 
-## 2. File Structure
+## Features
 
-After extracting the zip, you will see this folder:
-
-```
-project1_chatbot_gemini/
-├── chatbot_gemini.py    <- main program
-├── requirements.txt     <- dependencies list
-├── .env.example         <- sample API key file
-└── README.md            <- this guide
-```
-
-Place the entire folder anywhere (Desktop/Documents). Just remember the
-path — you need to open the terminal in that folder to run it.
+- Maintains full conversation history within a session
+- Sliding-window (FIFO) pruning to prevent token overflow
+- Input validation guard (blocks empty/whitespace messages)
+- Proper Gemini role schema (`user` / `model` with `parts` array)
+- Error handling for API failures
 
 ---
 
-## 3. Setup — Step by Step
+## Requirements
 
-### Step A: Create a FREE Gemini API Key
-1. Go to: https://aistudio.google.com/app/apikey
-2. Sign in with your Google account.
-3. Click **"Create API Key"**.
-4. Copy the key (it will look like: `AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX`)
+- Python 3.9+
+- Internet connection
+- A free Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey) (no credit card required)
 
-> This is completely FREE — no credit card required.
+---
 
-### Step B: Open Terminal / Command Prompt
-- **Windows:** Navigate into the folder, type `cmd` in the address bar, and press Enter.
-- **Mac/Linux:** Open Terminal and use `cd` to reach the folder:
-  ```
-  cd path/to/project1_chatbot_gemini
-  ```
+## Setup
 
-### Step C: Install Dependencies
-```
+```bash
+# Navigate to the project folder
+cd p1_AI_Chatbot_with_Memory
+
+# Install dependencies
 pip install -r requirements.txt
-```
-(If `pip` doesn't work, try `pip3`)
 
-### Step D: Set Up the API Key
-1. Rename `.env.example` to `.env`.
-2. Open `.env` (with Notepad or any text editor).
-3. Replace `your_api_key_here` with your actual key:
-   ```
-   GEMINI_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-   ```
+# Set up your API key
+cp .env.example .env
+# Edit .env and paste your Gemini API key:
+# GEMINI_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
 
 ---
 
-## 4. How to Run the Program
+## Usage
 
-In the same terminal (opened inside the folder), run:
-
-```
+```bash
 python chatbot_gemini.py
 ```
-(If you get an error, try `python3 chatbot_gemini.py`)
 
----
-
-## 5. How to Provide Input
-
-Once the program starts, you'll see a screen like this:
+Type your messages normally. Type `exit` or `quit` to end the session.
 
 ```
 ============================================================
@@ -87,32 +57,11 @@ Once the program starts, you'll see a screen like this:
   Type 'exit' or 'quit' to end the session.
 ============================================================
 
-You:
-```
-
-Type your message here, for example:
-```
-You: Hi, my name is Ali
-```
-Press Enter, and the AI will reply.
-
-Then type the next message:
-```
-You: What's my name?
-```
-
----
-
-## 6. Example Output
-
-```
 You: My name is Vipin
 AI: Nice to meet you, Vipin! How can I help you today?
 
 You: Write a short poem about technology
-AI: In circuits deep and wires bright,
-    Machines now dance with human light...
-    (full poem appears here)
+AI: In circuits deep and wires bright...
 
 You: What is my name?
 AI: Your name is Vipin.
@@ -122,31 +71,45 @@ You: exit
 Session ended. Goodbye!
 ```
 
-The third response (`Your name is Vipin`) proves that the chatbot
-remembered the name from the history array — this is the core
-requirement of the project.
+The third response (`Your name is Vipin`) proves the chatbot retained context from the history array.
 
 ---
 
-## 7. Troubleshooting
+## Project Structure
+
+```
+├── chatbot_gemini.py    Main application
+├── requirements.txt     Python dependencies
+├── .env.example         API key template
+├── .gitignore           Files ignored by git
+└── README.md            This guide
+```
+
+---
+
+## Troubleshooting
 
 | Error | Cause | Solution |
-|---|---|---|
-| `GEMINI_API_KEY not found` | `.env` file missing or key not set | Re-do Step D |
+|-------|-------|----------|
+| `GEMINI_API_KEY not found` | `.env` file missing or key not set | Create `.env` from `.env.example` with your key |
 | `API_KEY_INVALID` | Key copied incorrectly | Re-copy the key from AI Studio |
-| `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` again |
-| `RESOURCE_EXHAUSTED` | Free tier daily limit reached | Wait a while or try again tomorrow |
-| `404 NOT_FOUND ... no longer available` | Google retired the model (common) | In `chatbot_gemini.py`, change `MODEL_NAME` to `"gemini-flash-latest"` or `"gemini-3.5-flash"`. Latest list: https://ai.google.dev/gemini-api/docs/models |
-| `python` not recognized in terminal | Python not installed or not in PATH | Try `python3` or install from python.org |
+| `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
+| `RESOURCE_EXHAUSTED` | Free tier daily limit reached | Wait or upgrade to paid tier |
+| `404 NOT_FOUND` | Model has been retired | Update `MODEL_NAME` in `chatbot_gemini.py` — see [model list](https://ai.google.dev/gemini-api/docs/models) |
+| `python not recognized` | Python not in PATH | Use `python3` or install from [python.org](https://python.org) |
 
 ---
 
-## 8. Key Skills This Project Teaches
+## Skills Covered
 
-- API integration with Google's official `google-genai` SDK
-- Session / conversation state management
-- Gemini role schema: `user` and `model` (not assistant)
-- Sliding-window (FIFO) history pruning to avoid token overflow
-- Input validation before hitting the API
+- API integration with Google's `google-genai` SDK
+- Session state management with in-memory arrays
+- Gemini role schema (`user` / `model`)
+- Sliding-window (FIFO) history pruning
+- Input validation before API transmission
 
-Happy building! 🚀
+---
+
+## License
+
+This project is part of the DecodeLabs Generative AI Industrial Training Kit.
